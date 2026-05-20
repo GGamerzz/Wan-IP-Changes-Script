@@ -38,8 +38,35 @@ cd Wan-IP-Changes-Script
 
 ---
 
+## Setup
+ 
+### Create Required Directories and Files
+ 
+```bash
+sudo mkdir -p /wan_ip_checker/textfiles
+sudo touch /wan_ip_checker/last_ip.txt
+```
+ 
+### Copy the Script
+ 
+```bash
+sudo cp update_wan_ip.py /wan_ip_checker/update_wan_ip.py
+```
+ 
+### Set Permissions
+ 
+If running the script as your current user:
+ 
+```bash
+sudo chown -R $USER:$USER /wan_ip_checker
+```
+ 
+If running via cron as root, you can skip the `chown` step.
+ 
+---
+ 
 ## Usage
-
+ 
 ### Run Manually
 
 To run the script manually:
@@ -79,6 +106,15 @@ To run the script every 12 hours, add this to your crontab:
 - **Prometheus** scrapes the metric from `node_exporter`
 - **Grafana** can display the current WAN IP and trigger alerts when `wan_ip_change == 1`
 
+## Example Alert
+```yaml
+rules:
+      - alert: WANIPChanged
+        expr: wan_ip_change > 0
+        annotations:
+          summary: WAN IP has been changed!
+          description: 'WAN IP has changed to: {{ $labels.ip }}'
+```
 ---
 
 ## When to Use
