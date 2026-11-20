@@ -13,6 +13,12 @@ A Python script to monitor your public (WAN) IP address and expose it as a Prome
 - Stores the last known IP in `last_ip.txt`
 - Can be scheduled to run periodically using cron
 
+## Metric
+
+```
+wan_ip_change{current_ip="x.x.x.2", previous_ip="x.x.x.1"}	# 0 = no change, 1 = changed
+```
+
 ---
 
 ## How It Works
@@ -96,6 +102,7 @@ To run the script every 12 hours, add this to your crontab:
 ```bash
 0 */12 * * * python3 /wan_ip_checker/update_wan_ip.py
 ```
+
 
 ---
 
