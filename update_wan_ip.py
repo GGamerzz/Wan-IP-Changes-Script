@@ -22,8 +22,10 @@ def save_ip(ip):
     with open(LAST_IP_FILE, "w") as f:
         f.write(ip)
 
-def update_metric(current_ip, changed):
-    metric_content = f'wan_ip_change{{ip="{current_ip}"}} {changed}\n'
+def update_metric(current_ip, last_ip, changed):
+    metric_content = (
+        f'wan_ip_change{{current_ip="{current_ip}",previous_ip="{last_ip or "none"}"}} {changed}\n'
+    )
     with open(METRIC_FILE, "w") as f:
         f.write(metric_content)
 
@@ -39,7 +41,7 @@ def main():
     if changed:
         save_ip(current_ip)
 
-    update_metric(current_ip, changed)
+    update_metric(current_ip, last_ip, changed)
     print(f"Current IP: {current_ip}, Changed: {changed}")
 
 if __name__ == "__main__":
